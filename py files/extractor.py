@@ -11,13 +11,14 @@ import numpy as np
 # from scipy import misc
 import imageio
 import imutils
+import PIL
+
 
 def image_displayer(image):
     cv.imshow("see",image)
     cv.waitKey(0)
     cv.destroyAllWindows
-
-
+    return
 
 
 
@@ -90,6 +91,7 @@ def sudoku_fienda (img_name) :
 
 def cplit_sdoku_cells(img_name):
     board , lokshn = sudoku_fienda(img_name)
+    #cv.imwrite("Board" , board)
     image_displayer(board)
     length , girth = board.shape[:2]
     print(board.shape)
@@ -106,14 +108,14 @@ def cplit_sdoku_cells(img_name):
             img = board[y:y+h, x:x+w]
             print(img.shape)
             cv.imshow('hi',img)
-            img = (255-img)
+            #img = (255-img)
             cv.waitKey(50)
             cv.imwrite("BufferBox/" + str(ih) + str(iw) + ".png" , img)
             cv.destroyAllWindows
     return  
          
 
-cplit_sdoku_cells("sample.png")
+#cplit_sdoku_cells("sample1.png")
 
 '''
     the following function should be able to take in numpy array 
