@@ -34,5 +34,17 @@ def list_dizits(image_name):
     return dizit_lizt
 
 
-list_dizits("sample.png")
+def txt_fiel_io(dizit_lizt , path = "digits.txt"):
+    #nue_dizit_lizt = dizit_lizt.resize(9,9)
+    fiel = open(path , "w+")
+    queshun = str(dizit_lizt)
+    fiel.write(queshun)
+    fiel.close()
+
+
+dizit_lizt = list_dizits("sample.png")
+#izzit_list_np = np.array(dizit_lizt)
+txt_fiel_io(dizit_lizt)
+
+
 
