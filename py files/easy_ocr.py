@@ -12,25 +12,32 @@ import easyocr
 def prediction(diz_num, path = "BufferBox/"):
     reader = easyocr.Reader(['ch_sim','en'])
     image_path = path + diz_num + ".png"
+    img = cv.imread(image_path)
+    crop_img = img[7:72 , 7:72]
+    #et.image_displayer(crop_img)
     dizit = reader.readtext(str(image_path) , detail = 0)
-    #print(dizit)
+    #print(dizit[0])
+    #dizit_lizt = np.empty(1 , dtype=object, order='C', like=None)
+    #dizit_lizt.insert(dizit)
     return dizit
 
-
+#et.cplit_sdoku_cells("sample1.png")
+#prediction("73")
 
 
 def list_dizits(image_name):
     et.cplit_sdoku_cells(image_name)
-    dizit_lizt = []
+    dizit_lizt = np.empty((9,9), dtype=int, order='C', like=None)
     for z in range(9):
         for y in range(9):
             strinp = str(z)+str(y)
             dizit = prediction(strinp)
-            if dizit is None:
-                dizit_lizt.append(0)
+            if dizit == []:
+                dizit_lizt[z][y] = 0
             else :
-                dizit_lizt.append(dizit)
+                dizit_lizt[z][y] = dizit[0]
     print(len(dizit_lizt))
+    print(dizit_lizt)
     return dizit_lizt
 
 
@@ -42,7 +49,7 @@ def txt_fiel_io(dizit_lizt , path = "digits.txt"):
     fiel.close()
 
 
-dizit_lizt = list_dizits("sample.png")
+dizit_lizt = list_dizits("sample1.png")
 #izzit_list_np = np.array(dizit_lizt)
 txt_fiel_io(dizit_lizt)
 

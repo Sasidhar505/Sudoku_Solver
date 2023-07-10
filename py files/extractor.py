@@ -57,7 +57,7 @@ def perspective_formar(img_name , lokshn , height=729 , width = 729):
 ''' 
     the following function should be able to detect the 9x9 sudoku
     and isolate the sudoku while warping it according to specified 
-    dimensions '''
+    dimensions using perspective_formar funcshun '''
 
 def sudoku_fienda (img_name) :
     edged , base_img = basic_processor(img_name)
@@ -97,8 +97,8 @@ def cplit_sdoku_cells(img_name):
     print(board.shape)
     row_start , col_start = int(0) , int(0)
     row_end , col_end = int(length/9) , int(girth/9)
-    for ih in range(9 ):
-        for iw in range(9 ):
+    for ih in range(9):
+        for iw in range(9):
 
             x = int(girth/9*iw )
             y = int(length/9*ih)
@@ -107,9 +107,9 @@ def cplit_sdoku_cells(img_name):
             print(x,y,h,w)
             img = board[y:y+h, x:x+w]
             print(img.shape)
-            cv.imshow('hi',img)
+            #cv.imshow('hi',img)
             #img = (255-img)
-            cv.waitKey(50)
+            #cv.waitKey(50)
             cv.imwrite("BufferBox/" + str(ih) + str(iw) + ".png" , img)
             cv.destroyAllWindows
     return  
@@ -119,7 +119,34 @@ def cplit_sdoku_cells(img_name):
 
 '''
     the following function should be able to take in numpy array 
-    corresponding to the name of image and invert it '''
+    corresponding to the name of image and develeop individual
+    numpy arrays of each cell present in the sudoku board'''
+
+doku_board , lokshn = sudoku_fienda("sample1.png")
+print(doku_board.shape)
+print(doku_board[0].shape)
+print(doku_board[0].reshape(27,27))
+print(doku_board[0].shape)
+imagi = "sample1.png"
+def cplit_b0rd_cells_np(imag_nem):
+    doku_board , lokshn = sudoku_fienda(imagi)
+    sels = []
+    roes = np.vsplit(doku_board,9)
+    for z in roes:
+        cals = np.hsplit(z,9)
+        for sel in cals:
+            sel = sel[7:70 , 7:70]
+            sel = cv.resize(sel , (27,27) )/255.0
+            cv.imshow('sels' , sel)
+            cv.waitKey(50)
+            sels.append(sel)
+
+    return sels
+
+cplit_b0rd_cells_np(imagi)
+
+
+
 
 def img_invartar(iimage , name):
     iimage = (255-iimage)
