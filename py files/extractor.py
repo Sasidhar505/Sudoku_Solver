@@ -80,6 +80,8 @@ def sudoku_fienda (img_name) :
         break
     preped_img = perspective_formar(base_img , lokshn )
     preped_img = cv.cvtColor(preped_img , cv.COLOR_BGR2GRAY)
+    
+    image_displayer(preped_img)
     return preped_img , lokshn
     
 
@@ -133,12 +135,14 @@ def sudoku_fienda (img_name) :
 
 def cplit_b0rd_cells_np(imag_nem):
     doku_board , lokshn = sudoku_fienda(imag_nem)
+    doku_board = cv.bitwise_not(cv.adaptiveThreshold(doku_board, 255, cv.ADAPTIVE_THRESH_GAUSSIAN_C, cv.THRESH_BINARY, 101, 1))
+    image_displayer(doku_board)
     sels = []
     roes = np.vsplit(doku_board,9)
     for z in roes:
         cals = np.hsplit(z,9)
         for sel in cals:
-            sel = sel[7:70 , 7:70]
+            #sel = sel[7:70 , 7:70]
             #sel = (sel)/255.0
             #cv.imshow('sels' , sel)
             #cv.waitKey(50)
@@ -182,9 +186,7 @@ def cplit_b0rd_cells_np(imag_nem):
 
 
 
-def img_invartar(iimage , name):
-    iimage = (255-iimage)
-    cv.imwrite(name , iimage)
+
 
 
 
