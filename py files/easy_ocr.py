@@ -9,39 +9,49 @@ from keras.layers import Dense,Dropout,Flatten
 from keras.layers import Conv2D , MaxPool2D
 from keras import backend as k
 
-(X_train , y_train) , (X_test , y_test) = mnist.load_data()
+def trn_sev_modl():
+    (X_train , y_train) , (X_test , y_test) = mnist.load_data()
 
-X_train = X_train.reshape(X_train.shape[0] , 28 , 28 , 1).astype('float32')
-X_test = X_test.reshape(X_test.shape[0] , 28 , 28 , 1).astype('float32')
+    X_train = X_train.reshape(X_train.shape[0] , 28 , 28 , 1)
+    X_test = X_test.reshape(X_test.shape[0] , 28 , 28 , 1)
 
-y_train = keras.utils.to_categorical(y_train)
-y_test = keras.utils.to_categorical(y_test)
-num_classes = y_test.shape[0]
+    X_train = (X_train / 255.0)
+    X_test = (X_test / 255.0)
 
-
-
-X_train = X_train.astype('float32')
-X_test = X_test.astype('float32')
-# normalize to range [0, 1]
-X_train = (X_train / 255.0)
-X_test = (X_test / 255.0)
+    num_classes = 10
+    y_train = keras.utils.to_categorical(y_train,num_classes)
+    y_test = keras.utils.to_categorical(y_test,num_classes)
+   
 
 
-model = Sequential()
-model.add(Conv2D(32 , (3,3) , activation='relu' , kernel_initializer= 'he_uniform' , input_shape = (28,28,1)))
-model.add(Conv2D(64, (3, 3), activation='relu', kernel_initializer='he_uniform'))
-model.add(Conv2D(64, (3, 3), activation='relu', kernel_initializer='he_uniform'))
-model.add(MaxPool2D((2, 2)))
-model.add(Flatten())
-model.add(Dense(100, activation='relu', kernel_initializer='he_uniform'))
-model.add(Dense(10, activation='softmax'))
+    model = Sequential()
+    model.add(Conv2D(32 , (3,3) , activation='relu'  , input_shape = (28,28,1)))
+    model.add(Conv2D(64, (3, 3), activation='relu'))
+    model.add(MaxPool2D((2, 2)))
+    model.add(Dropout(0.25))
+    model.add(Flatten())
+    model.add(Dense(128, activation='relu'))
+    model.add(Dropout(0.5))
+    model.add(Dense(num_classes, activation='softmax'))
 
-model.compile( optimizer='adam' , loss='categorical_crossentropy', metrics=['accuracy'])
+    model.compile( loss='categorical_crossentropy', optimizer='adam' , metrics=['accuracy'])
 
-model.save('model/my_ocr_madel.keras')
+    batch_size = 128
+    epochs = 10
 
-print("Saved Model to Folder")
+    model.fit(X_train, y_train,
+            batch_size=batch_size,
+            epochs=epochs,
+            verbose=1,
+            validation_data=(X_test, y_test))
+    score = model.evaluate(X_test, y_test, verbose=0)
+    print('Test loss:', score[0])
+    print('Test accuracy:', score[1])
+    model.save("model/test_model.h5")
+    return score[0] , score[1]
 
+
+#loss , accuracy = trn_sev_modl()
 
 def predict(img):
     image = img.copy()
@@ -54,7 +64,7 @@ def predict(img):
 
     # plt.imshow(image.reshape(28, 28), cmap='Greys')
     # plt.show()
-    model = keras.models.load_model('model/my_ocr_madel.keras')
+    model = keras.models.load_model('model/digits.h5')
     pred = model.predict(image.reshape(1,28,28,1), batch_size=1)
     return pred.argmax()
 
@@ -63,16 +73,21 @@ def img_invartar(iimage):
     iimage = (255-iimage)
     
 
-imagi = "sample1.png"
+imagi = "sample.png"
 doku_sels = et.cplit_b0rd_cells_np(imagi)
 
-sel = doku_sels[2]
+sel = doku_sels[13]
+sel = sel[3:78 , 3:78]
+et.image_displayer(sel)
 thresh = 128  # define a threshold, 128 is the middle of black and white in grey scale
 # threshold the image
-gray = cv.threshold(sel, thresh, 255, cv.THRESH_BINARY)[1]
 
+#gray = cv.bitwise_not(gray , gray)
 # Find contours
-cnts = cv.findContours(gray, cv.RETR_TREE, cv.CHAIN_APPROX_SIMPLE)
+hi = predict(sel)
+print(hi)
+gray = cv.threshold(sel, thresh, 255, cv.THRESH_BINARY)[1]
+cnts = cv.findContours(gray, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE)
 cnts = cnts[0] if len(cnts) == 2 else cnts[1]
 for c in cnts:
     x, y, w, h = cv.boundingRect(c)
@@ -85,14 +100,16 @@ for c in cnts:
         continue
     ROI = gray[y:y + h, x:x + w]
     et.image_displayer(ROI)
+   
     # increasing the size of the number allws for better interpreation,
     # try adjusting the number and you will see the differnce
-    ROI = cv.resize(ROI,None, fx=120,fy=120)
-    #et.image_displayer(ROI)
-  
-    result = predict(ROI)
+    ROI_r = cv.resize(ROI,None, fx=5,fy=5)
+    
+    et.image_displayer(ROI_r)
+    
+    result = predict(ROI_r)
     print(result)
-
+    break
 
 
 

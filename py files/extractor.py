@@ -35,10 +35,14 @@ def basic_processor(img_name , path = "Input_Data/") :
     image_displayer(base_img)
     gray_img = cv.cvtColor(base_img,cv.COLOR_BGR2GRAY)
     gray_img = cv.GaussianBlur(gray_img,(9,9),0)
-    tresh_img = cv.adaptiveThreshold(gray_img,255,cv.ADAPTIVE_THRESH_GAUSSIAN_C,cv.THRESH_BINARY,17,3)
-    bfilter = cv.bilateralFilter(tresh_img, 13, 20, 20)
-    edged = cv.Canny(bfilter, 30, 180)
-    return(edged , base_img)
+    tresh_img = cv.adaptiveThreshold(gray_img,255,cv.ADAPTIVE_THRESH_GAUSSIAN_C,cv.THRESH_BINARY,11,2)
+    tresh_img = cv.bitwise_not(tresh_img , tresh_img)
+    #bfilter = cv.bilateralFilter(tresh_img, 13, 20, 20)
+    #edged = cv.Canny(bfilter, 30, 180)
+    kernel = np.array([[0., 1., 0.], [1., 1., 1.], [0., 1., 0.]], np.uint8)
+    tresh_img = cv.dilate(tresh_img, kernel)
+    image_displayer(tresh_img)
+    return(tresh_img , base_img)
 
 
 
@@ -80,7 +84,7 @@ def sudoku_fienda (img_name) :
         break
     preped_img = perspective_formar(base_img , lokshn )
     preped_img = cv.cvtColor(preped_img , cv.COLOR_BGR2GRAY)
-    
+    preped_img = cv.bitwise_not(preped_img , preped_img)
     image_displayer(preped_img)
     return preped_img , lokshn
     
@@ -135,7 +139,7 @@ def sudoku_fienda (img_name) :
 
 def cplit_b0rd_cells_np(imag_nem):
     doku_board , lokshn = sudoku_fienda(imag_nem)
-    doku_board = cv.bitwise_not(cv.adaptiveThreshold(doku_board, 255, cv.ADAPTIVE_THRESH_GAUSSIAN_C, cv.THRESH_BINARY, 101, 1))
+    #doku_board = cv.bitwise_not(cv.adaptiveThreshold(doku_board, 255, cv.ADAPTIVE_THRESH_GAUSSIAN_C, cv.THRESH_BINARY, 101, 1))
     image_displayer(doku_board)
     sels = []
     roes = np.vsplit(doku_board,9)
