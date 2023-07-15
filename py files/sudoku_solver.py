@@ -17,3 +17,6 @@ dizits = xtrt_nom("digits.txt")
 
 print('hi' , dizits[10])
 
+
+
+
