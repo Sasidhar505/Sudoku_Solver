@@ -43,3 +43,30 @@
 # print(doku_board[0].shape)
 # print(doku_board[0].reshape(27,27))
 # print(doku_board[0].shape)
+
+
+
+
+
+# cnts = cv.findContours(sel, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE)
+# cnts = cnts[0] if len(cnts) == 2 else cnts[1]
+
+
+# for c in cnts:
+#     x, y, w, h = cv.boundingRect(c)
+#     #print(x,y,w,h)
+#     if (x < 3 or y < 3 or h < 3 or w < 3):
+#         # Note the number is always placed in the center
+#         # Since image is 28x28
+#         # the number will be in the center thus x >3 and y>3
+#         # Additionally any of the external lines of the sudoku will not be thicker than 3
+#         continue
+#     ROI = sel[y-4:y + h +4, x-4:x + w+4]
+#     et.image_displayer(ROI)
+#     #ROI = cv.resize(ROI , (120,120))
+#     #print(x,y,w,h)
+#     # increasing the size of the number allws for better interpreation,
+#     # try adjusting the number and you will see the differnce
+#     resu = predict(ROI)
+#     print('withcnt: ' , resu)
+#     break

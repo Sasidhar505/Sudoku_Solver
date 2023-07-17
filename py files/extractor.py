@@ -32,21 +32,21 @@ def image_displayer(image):
 def basic_processor(img_name , path = "Input_Data/") :
     img_path = path + str(img_name)
     base_img = cv.imread(img_path)
-    image_displayer(base_img)
+    #image_displayer(base_img)
     gray_img = cv.cvtColor(base_img,cv.COLOR_BGR2RGB)
-    image_displayer(gray_img)
+    #image_displayer(gray_img)
     gray_img = cv.cvtColor(gray_img , cv.COLOR_RGB2GRAY)
     #gray_img = cv.GaussianBlur(gray_img,(9,9),0)
     tresh_img = cv.adaptiveThreshold(gray_img,255,cv.ADAPTIVE_THRESH_MEAN_C,cv.THRESH_BINARY_INV,39,10)
     #tresh_img = cv.bitwise_not(tresh_img , tresh_img)
     #kernel = np.array([[0., 1., 0.], [1., 1., 1.], [0., 1., 0.]], np.uint8)
     #tresh_img = cv.dilate(tresh_img, kernel)
-    image_displayer(tresh_img)
+    #image_displayer(tresh_img)
     
     #bfilter = cv.bilateralFilter(tresh_img, 13, 20, 20)
     #edged = cv.Canny(bfilter, 30, 180)
     #tresh_imgi = cv.bitwise_not(edged , edged)
-    image_displayer(tresh_img)
+    #image_displayer(tresh_img)
     return(tresh_img , base_img)
 
 
@@ -74,7 +74,7 @@ def perspective_formar(img_name , lokshn , height=729 , width = 729):
 def sudoku_fienda (img_name) :
     edged , base_img = basic_processor(img_name)
     print('in sudokufienda')
-    image_displayer(edged)
+    #image_displayer(edged)
 
     kunts = cv.findContours(edged.copy(), cv.RETR_TREE, cv.CHAIN_APPROX_SIMPLE)
     kantors = imutils.grab_contours(kunts)
@@ -92,7 +92,7 @@ def sudoku_fienda (img_name) :
     #preped_img = cv.cvtColor(preped_img , cv.COLOR_BGR2GRAY)
     #preped_img = cv.bitwise_not(preped_img , preped_img)
     print('board')
-    image_displayer(preped_img)
+    #image_displayer(preped_img)
     return preped_img , lokshn
     
 
@@ -104,10 +104,10 @@ def cplit_b0rd_cells_np(imag_nem):
     doku_board , lokshn = sudoku_fienda(imag_nem)
     gray_img = cv.cvtColor(doku_board,cv.COLOR_BGR2RGB)
     gray_img = cv.cvtColor(gray_img , cv.COLOR_RGB2GRAY)
-    image_displayer(gray_img)
+    #image_displayer(gray_img)
     doku_b0rd = cv.adaptiveThreshold(gray_img,255,cv.ADAPTIVE_THRESH_MEAN_C,cv.THRESH_BINARY_INV,29,10)
     print('board in cplit')
-    image_displayer(doku_b0rd)
+    #image_displayer(doku_b0rd)
     sels = []
     roes = np.vsplit(doku_b0rd,9)
     for z in roes:
