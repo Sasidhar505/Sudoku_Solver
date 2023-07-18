@@ -9,7 +9,7 @@ from keras.layers import Dense,Dropout,Flatten
 from keras.layers import Conv2D , MaxPool2D
 from keras.optimizers import RMSprop
 from keras import backend as k
-
+#import sudoku_solver as ss
 def trn_sev_modl():
     (X_train , y_train) , (X_test , y_test) = mnist.load_data()
 
@@ -52,6 +52,7 @@ def trn_sev_modl():
 def predict(img):
     image = img.copy()
     image = image[7:73 , 7:73]
+    #et.image_displayer(image)
     image = cv.resize(image, (28, 28))
 
     image = image.astype('float32')
@@ -65,35 +66,37 @@ def predict(img):
     else:
         model = keras.models.load_model('model/mnist.h5')
         pred = model.predict(image.reshape(1,28,28,1), batch_size=1)
-        print(pred.argmax())
+        #print(pred.argmax())
         return pred.argmax()
 
 
 def img_invartar(iimage):
     iimage = (255-iimage)
     
-
-imagi = "sample.png"
-
-
-doku_sels = et.cplit_b0rd_cells_np(imagi)
-
-# sel = doku_sels[1]
-
-# sel = sel[5:76 , 5:76]
+# doku_sels = et.cplit_b0rd_cells_np("sample.png")
+# sel = doku_sels[71]
 # et.image_displayer(sel)
-# predict(sel)
-# print(sel)
-queshn = np.zeros(81)
+# print(predict(sel))
+queshn = [0]*81
 
-
-
-for z in range(81):
-    queshn[z] = predict(doku_sels[z])
+def build_b0rd(img_name):
+    doku_sels = et.cplit_b0rd_cells_np(img_name)
+    for z in range(81):
+        queshn[z] = predict(doku_sels[z])
     
 
-queshnn = queshn.reshape(9,9)
-print(queshnn.shape)
-print(queshnn)
+    integer_array = np.array(queshn, dtype=np.int32)
+    #print(integer_array)
+    queshnn = integer_array.reshape((9,9))
+    #print(queshnn.shape)
+    return queshnn
+        
 
 
+
+
+
+# ss.print_board(queshnn)
+# answer = ss.solve(queshnn)
+# print("___________________")
+# ss.print_board(answer)
