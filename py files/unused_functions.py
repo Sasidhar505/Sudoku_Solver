@@ -70,3 +70,30 @@
 #     resu = predict(ROI)
 #     print('withcnt: ' , resu)
 #     break
+
+
+
+'''
+    Predicshun : following function tries to predict the 
+    digits from the numpy array directly using 
+    keras model model_ocr.h5 instead of using easy_ocr 
+    which took in images previously'''
+
+# def predicshun_of_npsels(nparr_nem):
+#     pipline = ko.pipeline.Pipeline()
+#     boku_sels = cplit_b0rd_cells_np(imagi)
+#     doku_zels = np.array(boku_sels).reshape(-1 , 9 , 9 , 1)
+#     classes = np.arange(0,10)
+#     model = tf.keras.models.load_model("model/digits.h5")
+
+#     predctd_nems = []
+#     for k in predctd_nems:
+#         index = (np.argmax(k))
+#         predctd_nem = classes[index]
+#         predctd_nems.append(predctd_nem)
+#     print(predctd_nems)
+
+#     return
+
+
+# predicshun_of_npsels(imagi)

@@ -3,7 +3,7 @@ import numpy as np
 
 imagi = "sample.png"
 queshnn = ds.build_b0rd(imagi)
-queshnn[7][8] = 7
+#queshnn[7][8] = 7
 print(queshnn)
 
 

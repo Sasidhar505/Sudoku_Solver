@@ -9,6 +9,7 @@ from keras.layers import Dense,Dropout,Flatten
 from keras.layers import Conv2D , MaxPool2D
 from keras.optimizers import RMSprop
 from keras import backend as k
+import pytesseract
 #import sudoku_solver as ss
 def trn_sev_modl():
     (X_train , y_train) , (X_test , y_test) = mnist.load_data()
@@ -64,7 +65,7 @@ def predict(img):
     if cv.countNonZero(image)  == 0 :
         return 0
     else:
-        model = keras.models.load_model('model/mnist.h5')
+        model = keras.models.load_model('model\mnist.h5')
         pred = model.predict(image.reshape(1,28,28,1), batch_size=1)
         #print(pred.argmax())
         return pred.argmax()
@@ -72,9 +73,33 @@ def predict(img):
 
 def img_invartar(iimage):
     iimage = (255-iimage)
+
+def getNumber(image):
+    #gray = cv.cvtColor(image, cv.COLOR_BGR2GRAY)
     
-# doku_sels = et.cplit_b0rd_cells_np("sample.png")
-# sel = doku_sels[71]
+    # Otsu Tresholding automatically find best threshold value
+    image = image[7:73 , 7:73]
+    
+    # invert the image if the text is white and background is black
+    if cv.countNonZero(image)  == 0 :
+        return 0
+    else :
+        _, binary_image = cv.threshold(image, 0, 255, cv.THRESH_OTSU)
+        count_white = np.sum(binary_image > 0)
+        count_black = np.sum(binary_image == 0)
+        if count_black > count_white:
+            binary_image = 255 - binary_image
+            
+        # padding
+        final_image = cv.copyMakeBorder(image, 10, 10, 10, 10, cv.BORDER_CONSTANT, value=(255, 255, 255))
+        et.image_displayer(final_image)
+        txt = pytesseract.image_to_string(
+            final_image, config='--psm 13 --oem 3 -c tessedit_char_whitelist=0123456789')
+        return txt
+
+    
+doku_sels = et.cplit_b0rd_cells_np("sample.png")
+sel = doku_sels[9]
 # et.image_displayer(sel)
 # print(predict(sel))
 queshn = [0]*81
@@ -82,7 +107,7 @@ queshn = [0]*81
 def build_b0rd(img_name):
     doku_sels = et.cplit_b0rd_cells_np(img_name)
     for z in range(81):
-        queshn[z] = predict(doku_sels[z])
+        queshn[z] = int(getNumber(doku_sels[z]))
     
 
     integer_array = np.array(queshn, dtype=np.int32)
@@ -93,7 +118,9 @@ def build_b0rd(img_name):
         
 
 
-
+et.image_displayer(sel)
+x = getNumber(sel)
+print( x , type(x))
 
 
 # ss.print_board(queshnn)
